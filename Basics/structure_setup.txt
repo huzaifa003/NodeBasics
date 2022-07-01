@@ -1,0 +1,5 @@
+node -i package_name 
+node -i date-fs
+node -i nodemon -D  (dependency for SCRIPTS
+"dev": "nodemon first" IN scripts of packages.json (RUN THE DEV MON HOT RELOAD BY npm run dev , DEFAULT FILE CAN BE CHANGED IN PACKAGES)
+npm -i uuid (ALLOWS TO GENERATE ID)
