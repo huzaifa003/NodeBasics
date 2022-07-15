@@ -39,10 +39,24 @@ const addEmployee = (req, res) => {
 }
 
 const updateEmployee = (req, res) => {
-    res.json({
-        "firstname": req.body.firstname,
-        "lastname": req.body.lastname
-    })
+    const updateEmployee = {
+        id: req.body.id,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname
+    }
+    for (let i = 0; i < data.employees.length; i++) {
+        const employee = data.employees[i];
+        if (updateEmployee.id == employee.id)
+        {
+            data.employees[i].firstname = updateEmployee.firstname
+            data.employees[i].lastname = updateEmployee.lastname
+            writeEmployee(data.employees)
+            return res.status(200).send(data.employees)
+        }
+        
+    }
+    return res.status(401).send("Does not exist already")
+    
 }
 
 const deleteEmployee = (req, res) => {
