@@ -54,11 +54,26 @@ const checkUser = (req,res)=>{
 
     const person = userData.users.find(person=> person.username === username)
     if (!person){
-        return 
+        return res.status(404).json({
+            "message" : "Person Not Found"
+        })
+    }
+
+    const compare = await bcrypt.compare(password, person.password)
+    if (compare){
+        res.status(200).json({
+            "message": "Successfully Log In"
+        })
+    }
+    else{
+        res.status(401).json({
+            "message" : "Unauthorized Login"
+        })
     }
 }
 
 
 module.exports = {
-    addUser
+    addUser,
+    checkUser
 }

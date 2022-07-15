@@ -9,4 +9,7 @@ const userController = require('../../controller/userController')
 router.route('/|/register(.html)')
     .post(userController.addUser)
 
+
+router.route('/login(.html)')
+    .post(userController.checkUser)
 module.exports = router
