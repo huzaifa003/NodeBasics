@@ -23,6 +23,7 @@ app.use(express.json()) //enables to send json objects
 
 app.use('/',express.static(path.join(__dirname,'/public')))
 
+app.use('/employee',require('./router/api/employee'))
 app.use('/',require('./router/dir'))
 app.listen(port, ()=>{
     console.log(`Port Listening at ${port}`)
