@@ -10,6 +10,10 @@ router.route('/')
     .put(controllerEmployee.updateEmployee)
     .delete (controllerEmployee.deleteEmployee)
 
+router.route('/save')
+    .post(controllerEmployee.writeFileEmployee)
+
+    
 router.route('/:id')
     .get(controllerEmployee.getEmployee)
 module.exports = router

@@ -8,9 +8,19 @@ const data = {
     employees: require('../data/employee.json')
 }
 
-function writeEmployee(employees) {
-    fs.writeFileSync(pathEmployee, JSON.stringify(employees))
-}
+// function getEmployeeById(id)
+// {
+//     for (let i = 0; i < data.employees.length; i++) {
+//         const employee = data.employees[i];
+//         if (employee.id == id)
+//         {
+//             return employee
+//         }
+//     }
+//     return {id : 0, firstname: '', lastname: ''}
+// }
+
+
 function setEmployees(new_emp) {
     data.employees.push({
         id: new_emp.id,
@@ -18,17 +28,29 @@ function setEmployees(new_emp) {
         lastname: new_emp.lastname
     })
     console.log(data.employees)
-    writeEmployee(data.employees)
 }
+
+const writeFileEmployee = (req, res) => {
+    fs.writeFileSync(pathEmployee, JSON.stringify(data.employees))
+    res.status(200).send("File Successfilly Wrriten")
+}
+
 const getAllEmployees = (req, res) => {
-    console.log(pathEmployee)
     res.json(data.employees)
 }
 const addEmployee = (req, res) => {
 
-    console.log(data.employees[data.employees.length - 1].id)
+    tempId = 1
+    if (data.employees.length == 0)
+    {
+        tempId = 1
+    }
+    else
+    {
+        tempId = data.employees[data.employees.length - 1].id + 1
+    }
     const newEmployee = {
-        id: data.employees[data.employees.length - 1].id + 1,
+        id: tempId,
         firstname: req.body.firstname,
         lastname: req.body.lastname
     }
@@ -40,7 +62,7 @@ const addEmployee = (req, res) => {
 
 const updateEmployee = (req, res) => {
     const updateEmployee = {
-        id: req.body.id,
+        id: parseInt(req.body.id),
         firstname: req.body.firstname,
         lastname: req.body.lastname
     }
@@ -50,8 +72,7 @@ const updateEmployee = (req, res) => {
         {
             data.employees[i].firstname = updateEmployee.firstname
             data.employees[i].lastname = updateEmployee.lastname
-            writeEmployee(data.employees)
-            return res.status(200).send(data.employees)
+            return res.status(200).json(data.employees)
         }
         
     }
@@ -60,11 +81,30 @@ const updateEmployee = (req, res) => {
 }
 
 const deleteEmployee = (req, res) => {
-    res.json({ "id": req.body.id })
+    id = parseInt(req.body.id)
+    for (let i = 0; i < data.employees.length; i++) {
+        const employee = data.employees[i];
+        if (id == employee.id)
+        {
+            data.employees.splice(i,1)
+            return res.status(200).json(data.employees)
+        }
+        
+    }
+    return res.status(401).send("Does not exist already")
 }
 
 const getEmployee = (req, res) => {
-    res.json({ "id": req.params.id })
+    id = parseInt(req.params.id)
+    for (let i = 0; i < data.employees.length; i++) {
+        const employee = data.employees[i];
+        if (id == employee.id)
+        {
+            return res.status(200).json(employee)
+        }
+        
+    }
+    return res.status(401).json("Does not exist already")
 }
 
 module.exports = {
@@ -72,5 +112,6 @@ module.exports = {
     addEmployee,
     updateEmployee,
     deleteEmployee,
-    getEmployee
+    getEmployee,
+    writeFileEmployee
 }
