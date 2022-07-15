@@ -1,25 +1,27 @@
 const express = require('express')
 const path = require('path')
-const fs  = require('fs')
+const fs = require('fs')
 
-const pathEmployee = 'Basics/server/nodeJS_Server_Middleware/data/employee.json'
+
+const pathEmployee = path.join(__dirname, '..', 'data', 'employee.json')
 const data = {
     employees: require('../data/employee.json')
 }
 
+function writeEmployee(employees) {
+    fs.writeFileSync(pathEmployee, JSON.stringify(employees))
+}
 function setEmployees(new_emp) {
     data.employees.push({
         id: new_emp.id,
         firstname: new_emp.firstname,
         lastname: new_emp.lastname
     })
-
-    fs.writeFileSync(pathEmployee,JSON.stringify(data.employees))
-
     console.log(data.employees)
-
-} 
+    writeEmployee(data.employees)
+}
 const getAllEmployees = (req, res) => {
+    console.log(pathEmployee)
     res.json(data.employees)
 }
 const addEmployee = (req, res) => {
@@ -32,7 +34,7 @@ const addEmployee = (req, res) => {
     }
 
     setEmployees(newEmployee)
-    
+
     res.json(data.employees)
 }
 
