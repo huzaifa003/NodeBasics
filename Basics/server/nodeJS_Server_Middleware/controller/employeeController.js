@@ -66,7 +66,8 @@ const updateEmployee = async (req, res) => {
 }
 
 const deleteEmployee = (req, res) => {
-    employees.findById(req.params.id, async (err, docs) => {
+
+    employees.findByIdAndDelete(req.body.id, async (err, docs) => {
         if (err) {
             return res.status(401).json({
                 "message": "Does not exist already"
