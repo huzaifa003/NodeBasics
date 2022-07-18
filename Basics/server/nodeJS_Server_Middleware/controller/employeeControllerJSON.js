@@ -1,47 +1,64 @@
-const mongoose = require('mongoose')
 const path = require('path')
 const fs = require('fs')
 
 
-// // FOR JSON FILE 
-// const pathEmployee = path.join(__dirname, '..', 'data', 'employee.json') 
-// const data = {
-//     employees: require('../data/employee.json')
+// FOR JSON FILE 
+const pathEmployee = path.join(__dirname, '..', 'data', 'employee.json') 
+const data = {
+    employees: require('../data/employee.json')
+}
+
+
+// function getEmployeeById(id)
+// {
+//     for (let i = 0; i < data.employees.length; i++) {
+//         const employee = data.employees[i];
+//         if (employee.id == id)
+//         {
+//             return employee
+//         }
+//     }
+//     return {id : 0, firstname: '', lastname: ''}
 // }
-//-------------WE HAVE ALREADY CONNECTED TO DB in the Start------------------------------------\\
 
 
-//FOR Database CompanyDB with collection of employees
-const employees = require('../data/Employee')
-
-
-
-async function setEmployees(new_emp) {
-    const result = await employees.create({
-        "firstname": new_emp.firstname,
-        "lastname": new_emp.lastname
+function setEmployees(new_emp) {
+    data.employees.push({
+        id: new_emp.id,
+        firstname: new_emp.firstname,
+        lastname: new_emp.lastname
     })
-    console.log(result)
+    console.log(data.employees)
 }
 
-
-const getAllEmployees = async (req, res) => {
-    const data = await employees.find({})
-    res.json(data)
+const writeFileEmployee = (req, res) => {
+    fs.writeFileSync(pathEmployee, JSON.stringify(data.employees))
+    res.status(200).send("File Successfilly Wrriten")
 }
-const addEmployee = async (req, res) => {
 
-   
+const getAllEmployees = (req, res) => {
+    res.json(data.employees)
+}
+const addEmployee = (req, res) => {
+
+    tempId = 1
+    if (data.employees.length == 0)
+    {
+        tempId = 1
+    }
+    else
+    {
+        tempId = data.employees[data.employees.length - 1].id + 1
+    }
     const newEmployee = {
-        // id: tempId,
+        id: tempId,
         firstname: req.body.firstname,
         lastname: req.body.lastname
     }
 
     setEmployees(newEmployee)
 
-    const data = await employees.find({})
-    res.json(data)
+    res.json(data.employees)
 }
 
 const updateEmployee = (req, res) => {
@@ -97,4 +114,5 @@ module.exports = {
     updateEmployee,
     deleteEmployee,
     getEmployee,
+    writeFileEmployee
 }

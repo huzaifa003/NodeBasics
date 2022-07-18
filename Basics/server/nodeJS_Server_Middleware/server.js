@@ -1,7 +1,15 @@
 
 const express = require('express')
 const path = require('path')
+
+const mongoose = require('mongoose')
+const dbConnect = require('./config/dbConnection')
+
 const port = process.env.PORT | 3500
+
+
+require('dotenv').config({path: path.join('Basics','server','nodeJS_Server_Middleware','.env')})
+
 
 app = express()
 
@@ -27,6 +35,13 @@ app.use('/employee',require('./router/api/employee'))
 app.use('/register', require('./router/api/registeration'))
 app.use('/login', require('./router/api/authentication'))
 app.use('/',require('./router/dir'))
-app.listen(port, ()=>{
-    console.log(`Port Listening at ${port}`)
+
+dbConnect()
+
+mongoose.connection.once('open', ()=>{ //Adding the port after connecting to database 
+    console.log("Connected to MongoDB")
+    app.listen(port, ()=>{
+        console.log(`Port Listening at ${port}`)
+    })
 })
+
