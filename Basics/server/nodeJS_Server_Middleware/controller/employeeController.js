@@ -44,22 +44,33 @@ const addEmployee = async (req, res) => {
     res.json(data)
 }
 
-const updateEmployee = (req, res) => {
+const updateEmployee = async (req, res) => {
     const updateEmployee = {
-        id: parseInt(req.body.id),
+        // id: parseInt(req.body.id),
         firstname: req.body.firstname,
         lastname: req.body.lastname
     }
-    for (let i = 0; i < data.employees.length; i++) {
-        const employee = data.employees[i];
-        if (updateEmployee.id == employee.id)
-        {
-            data.employees[i].firstname = updateEmployee.firstname
-            data.employees[i].lastname = updateEmployee.lastname
-            return res.status(200).json(data.employees)
-        }
-        
+
+    const result = await employees.findByIdAndUpdate(req.body.id,({
+        "firstname": updateEmployee.firstname,
+        "lastname": updateEmployee.lastname,
+    }))
+   
+    if (result){
+        const data = await employees.find({})
+        return res.status(200).json(result)
     }
+    
+    // for (let i = 0; i < data.employees.length; i++) {
+    //     const employee = data.employees[i];
+    //     if (updateEmployee.id == employee.id)
+    //     {
+    //         data.employees[i].firstname = updateEmployee.firstname
+    //         data.employees[i].lastname = updateEmployee.lastname
+    //         return res.status(200).json(data.employees)
+    //     }
+        
+    // }
     return res.status(401).send("Does not exist already")
     
 }
