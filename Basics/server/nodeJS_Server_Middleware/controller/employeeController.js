@@ -31,7 +31,7 @@ const getAllEmployees = async (req, res) => {
 }
 const addEmployee = async (req, res) => {
 
-   
+
     const newEmployee = {
         // id: tempId,
         firstname: req.body.firstname,
@@ -51,55 +51,51 @@ const updateEmployee = async (req, res) => {
         lastname: req.body.lastname
     }
 
-    const result = await employees.findByIdAndUpdate(req.body.id,({
+    const result = await employees.findByIdAndUpdate(req.body.id, ({
         "firstname": updateEmployee.firstname,
         "lastname": updateEmployee.lastname,
     }))
-   
-    if (result){
-        const data = await employees.find({})
+
+    if (result) {
         return res.status(200).json(result)
     }
-    
-    // for (let i = 0; i < data.employees.length; i++) {
-    //     const employee = data.employees[i];
-    //     if (updateEmployee.id == employee.id)
-    //     {
-    //         data.employees[i].firstname = updateEmployee.firstname
-    //         data.employees[i].lastname = updateEmployee.lastname
-    //         return res.status(200).json(data.employees)
-    //     }
-        
-    // }
-    return res.status(401).send("Does not exist already")
-    
+
+    return res.status(401).json({
+        "message": "Does not exist already"
+    })
 }
 
 const deleteEmployee = (req, res) => {
-    id = parseInt(req.body.id)
-    for (let i = 0; i < data.employees.length; i++) {
-        const employee = data.employees[i];
-        if (id == employee.id)
-        {
-            data.employees.splice(i,1)
-            return res.status(200).json(data.employees)
+    employees.findById(req.params.id, async (err, docs) => {
+        if (err) {
+            return res.status(401).json({
+                "message": "Does not exist already"
+            })
         }
-        
-    }
-    return res.status(401).send("Does not exist already")
+        else {
+            console.log(docs)
+            const data = await employees.find({})
+            return res.status(200).json(docs)
+        }
+    })
 }
 
 const getEmployee = (req, res) => {
-    id = parseInt(req.params.id)
-    for (let i = 0; i < data.employees.length; i++) {
-        const employee = data.employees[i];
-        if (id == employee.id)
-        {
-            return res.status(200).json(employee)
+    employees.findById(req.params.id, async (err, docs) => {
+        if (err) {
+            return res.status(401).json({
+                "message": "Does not exist already"
+            })
         }
-        
-    }
-    return res.status(401).json("Does not exist already")
+        else {
+            console.log(docs)
+            const data = await employees.find({})
+            return res.status(200).json(docs)
+        }
+    })
+
+
+
 }
 
 module.exports = {
